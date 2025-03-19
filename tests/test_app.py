@@ -1,7 +1,7 @@
 import pytest
 import requests
 from unittest.mock import patch, Mock
-from moneychanger import get_exchange_rate
+from app import get_exchange_rate
 
 def test_get_exchange_rate_success():
     # Mock the successful API response
