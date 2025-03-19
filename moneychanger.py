@@ -87,17 +87,24 @@ def call_llm(textbox_input) -> Dict:
     else:
         return response
 
-def run_pipeline():
+def run_pipeline(user_input):
     """Based on textbox_input, determine if you need to use the tools (function calling) for the LLM.
     Call get_exchange_rate(...) if necessary"""
+    
+    response = call_llm(user_input)
 
-    if True: #tool_calls
-        # Update this
-        st.write(f'{base} {amount} is {target} {exchange_response["conversion_result"]:.2f}')
+    if response.choices[0].finish_reason == "tool_calls":
+        response_arguments = json.loads(response.choices[0].message.tool_calls[0].function.arguments)
+        base = response_arguments["base"]
+        target = response_arguments["target"]
+        amount = response_arguments["amount"]
+        _, _, _, conversion_result = get_exchange_rate(base, target, amount)
+        # Display the response
+        st.write(f'{base} {amount} is {target} {conversion_result}')
 
-    elif True: #tools not used
+    elif response.choices[0].finish_reason == "stop":
         # Update this
-        st.write(f"(Function calling not used) and response from the model")
+        st.write(f"(Function calling not used) and response from the model was: {response.choices[0].message.content}")
     else:
         st.write("NotImplemented")
 
@@ -114,11 +121,4 @@ user_input = st.text_input("Enter the amount and currency:")
 # Submit button
 if st.button("Submit"):
     # Print the contents of the text box below
-    response = call_llm(user_input)
-    response_arguments = json.loads(response.choices[0].message.tool_calls[0].function.arguments)
-    base = response_arguments["base"]
-    target = response_arguments["target"]
-    amount = response_arguments["amount"]
-    exchange_response = get_exchange_rate(base, target, amount)
-    # Display the response
-    st.write(exchange_response)
+    run_pipeline(user_input)
