@@ -68,9 +68,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.__clientidsecretname__ }}
-          tenant-id: ${{ secrets.__tenantidsecretname__ }}
-          subscription-id: ${{ secrets.__subscriptionidsecretname__ }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5078B0D6593C45E7BC59D41032D4376A }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_BD26407CAD254DE08F531788837655D0 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_D59373E566C642ABBC9E4DABFFE0464E }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
@@ -78,3 +78,4 @@ jobs:
         with:
           app-name: 'moneychanger'
           slot-name: 'Production'
+          
